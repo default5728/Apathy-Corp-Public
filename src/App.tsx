@@ -15,7 +15,7 @@ import { useScrollReveal } from './lib/reveal';
 import { CandidateApplication } from './types';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(false);
+  const [showIntro, setShowIntro] = useState(true);
   const [currentTab, setCurrentTab] = useState<'home' | 'calc' | 'leaders' | 'about'>('home');
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
