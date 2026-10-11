@@ -172,7 +172,7 @@ export const CalculatorView: React.FC<CalculatorViewProps> = ({ onBack }) => {
             onClick={handleReset}
             className="btn-glitch !px-8 !py-3 cursor-pointer"
           >
-            <RotateCcw className="w-3.5 h-3.5 mr-2" />
+            
             <span className="btn-text">СБРОСИТЬ</span>
           </button>
         </div>
