@@ -38,9 +38,7 @@ const VEHICLES: VehicleCard[] = [
     imgSrc: '/images/trans_4.png',
     desc: 'Скоростной фургон для сбора и доставки ресурсов. Доступен с 3-го ранга',
   },
-];
-
- {
+  {
     id: '5',
     title: 'Rumpo Заказной',
     subtitle: 'Зарезервированный транспорт ( PNG later ) ',

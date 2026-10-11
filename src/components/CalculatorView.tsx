@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, RotateCcw, ArrowLeft, Coins } from 'lucide-react';
+import { Calculator, ArrowLeft, Coins } from 'lucide-react';
 
 interface ResourceItem {
   id: string;
