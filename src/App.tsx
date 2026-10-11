@@ -9,6 +9,7 @@ import { CalculatorView } from './components/CalculatorView';
 import { LeadersView } from './components/LeadersView';
 import { AboutView } from './components/AboutView';
 import { StaffSyncModal } from './components/StaffSyncModal';
+import { fetchApplicationsFromFirestore } from './lib/firebase';
 import { CandidateApplication } from './types';
 
 export default function App() {
@@ -18,16 +19,31 @@ export default function App() {
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [pendingAppsCount, setPendingAppsCount] = useState<number>(0);
 
-  // Check pending applications count for live badges
+  // Live count of applications still waiting for an HR decision
   useEffect(() => {
-    fetch('/api/applications?status=pending')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.success && typeof data.count === 'number') {
-          setPendingAppsCount(data.count);
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const apps = await fetchApplicationsFromFirestore();
+        if (!cancelled) setPendingAppsCount(apps.filter((a) => a.status === 'pending').length);
+      } catch {
+        try {
+          const res = await fetch('/api/applications?status=pending');
+          const data = await res.json();
+          if (!cancelled && data.success && typeof data.count === 'number') {
+            setPendingAppsCount(data.count);
+          }
+        } catch {
+          /* badge stays at its last value */
         }
-      })
-      .catch(() => {});
+      }
+    };
+    load();
+    const timer = setInterval(load, 30000);
+    return () => {
+      cancelled = true;
+      clearInterval(timer);
+    };
   }, []);
 
   const handleApplicationCreated = () => {

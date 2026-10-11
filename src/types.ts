@@ -12,6 +12,7 @@ export interface CandidateApplication extends ApplicationFormData {
   submittedAt: string;
   reviewedAt?: string;
   reviewerNotes?: string;
+  createdProfileId?: string;
   source: string;
 }
 

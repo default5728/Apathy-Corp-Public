@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ApplicationFormData, CandidateApplication } from '../types';
-import { submitApplicationToFirestore } from '../lib/firebase';
+import { submitApplicationToFirestore, validateApplication } from '../lib/firebase';
 import {
   CheckCircle2,
   Send,
@@ -35,6 +35,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submittedApp, setSubmittedApp] = useState<CandidateApplication | null>(null);
+  const [handedToHr, setHandedToHr] = useState(true);
 
   if (!isOpen) return null;
 
@@ -70,55 +71,63 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       return;
     }
 
+    const formatError = validateApplication(formData);
+    if (formatError) {
+      setError(formatError);
+      return;
+    }
+
     setLoading(true);
 
+    let created: CandidateApplication | null = null;
+
+    // 1. Primary channel: shared Firestore collection read by the staff portal (ac)
     try {
-      // 1. Send via API to server
-      const res = await fetch('/api/applications', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
+      created = await submitApplicationToFirestore(formData);
+    } catch (fbErr) {
+      console.warn('Firestore submit failed, falling back to REST API:', fbErr);
+    }
 
-      const json = await res.json();
-
-      if (!res.ok || !json.success) {
-        throw new Error(json.error || 'Ошибка при отправке заявки на сервер');
-      }
-
-      const created: CandidateApplication = json.application;
-
-      // 2. Also record in Firebase Firestore if configured
-      submitApplicationToFirestore(formData).catch((fbErr) => {
-        console.warn('Firebase sync status:', fbErr);
-      });
-
-      // Save to local storage for user backup
+    // 2. Fallback channel: the portal's own express API
+    if (!created) {
       try {
-        const saved = JSON.parse(localStorage.getItem('apathy_my_applications') || '[]');
-        saved.unshift(created);
-        localStorage.setItem('apathy_my_applications', JSON.stringify(saved));
-      } catch {
-        // ignore
+        const res = await fetch('/api/applications', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const json = await res.json();
+        if (!res.ok || !json.success) {
+          throw new Error(json.error || 'Ошибка при отправке заявки на сервер');
+        }
+        created = json.application as CandidateApplication;
+        setHandedToHr(false);
+      } catch (err: unknown) {
+        console.error('Submit application failed on both channels:', err);
+        setError(
+          'База данных заявок временно недоступна. Заявка НЕ отправлена — повторите попытку позже.'
+        );
+        setLoading(false);
+        return;
       }
+    } else {
+      setHandedToHr(true);
+    }
 
-      setSubmittedApp(created);
-      if (onApplicationCreated) {
-        onApplicationCreated(created);
-      }
-    } catch (err: unknown) {
-      console.error('Submit application failed:', err);
-      // Fallback: create offline candidate application if offline
-      const fallbackApp: CandidateApplication = {
-        id: `APP-${Math.floor(1000 + Math.random() * 9000)}`,
-        ...formData,
-        status: 'pending',
-        submittedAt: new Date().toISOString(),
-        source: 'ac2_portal_client',
-      };
-      setSubmittedApp(fallbackApp);
-    } finally {
-      setLoading(false);
+    setSubmittedApp(created);
+    setLoading(false);
+
+    // Save to local storage for user backup
+    try {
+      const saved = JSON.parse(localStorage.getItem('apathy_my_applications') || '[]');
+      saved.unshift(created);
+      localStorage.setItem('apathy_my_applications', JSON.stringify(saved));
+    } catch {
+      // ignore
+    }
+
+    if (onApplicationCreated) {
+      onApplicationCreated(created);
     }
   };
 
@@ -132,6 +141,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     });
     setSubmittedApp(null);
     setError(null);
+    setHandedToHr(true);
   };
 
   return (
@@ -295,8 +305,16 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               <CheckCircle2 className="w-7 h-7" />
             </div>
 
-            <div className="inline-block px-3.5 py-1 rounded-full border border-emerald-500/40 bg-emerald-950/30 text-emerald-300 text-[10px] tracking-widest font-mono uppercase mb-2">
-              API 200 OK · ЗАЯВКА ЗАРЕГИСТРИРОВАНА
+            <div
+              className={`inline-block px-3.5 py-1 rounded-full border text-[10px] tracking-widest font-mono uppercase mb-2 ${
+                handedToHr
+                  ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-300'
+                  : 'border-amber-500/40 bg-amber-950/30 text-amber-300'
+              }`}
+            >
+              {handedToHr
+                ? 'База данных APATHY · ЗАЯВКА ПЕРЕДАНА В ОТДЕЛ КАДРОВ'
+                : 'ВНИМАНИЕ · ЗАЯВКА СОХРАНЕНА БЕЗ ОБЩЕЙ БАЗЫ, HR ЕЁ НЕ УВИДИТ'}
             </div>
 
             <h3 className="text-lg font-bold text-white uppercase tracking-wider font-['Bruno_Ace_SC',sans-serif] mb-2">
