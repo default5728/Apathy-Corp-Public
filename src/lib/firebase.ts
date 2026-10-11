@@ -1,4 +1,4 @@
-import { initializeApp, getApps, getApp, type FirebaseApp } from 'firebase/app';
+import { initializeApp, getApps, type FirebaseApp } from 'firebase/app';
 import {
   getFirestore,
   collection,
@@ -24,13 +24,29 @@ export const firebaseConfig = {
   messagingSenderId: '690564876879',
 };
 
-const app: FirebaseApp = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
+// Дефолтное приложение ищем по имени: corpFirebase может инициализировать свой
+// ('corp') раньше этого модуля, и тогда getApp() без имени падает.
+const app: FirebaseApp =
+  getApps().find((a) => a.name === '[DEFAULT]') || initializeApp(firebaseConfig);
 export const db: Firestore = getFirestore(app, firebaseConfig.firestoreDatabaseId);
 
 // Shared with the staff portal (github.com/default5728/ac) — same dedicated applications project.
 // The document shape is enforced by that project's firestore.rules, so every key must be present.
 export const APPLICATIONS_COLLECTION = 'applications';
 const APPLICATION_SOURCE = 'public_ac2_site';
+
+// Код проверки статуса: 6 символов без похожих (0/O, 1/I) — формат AP-XXXXXX.
+const CODE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+
+export function generatePublicCode(): string {
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  let code = '';
+  for (let i = 0; i < bytes.length; i++) {
+    code += CODE_ALPHABET[bytes[i] % CODE_ALPHABET.length];
+  }
+  return `AP-${code}`;
+}
 
 export function validateApplication(data: ApplicationFormData): string | null {
   const nick = data.nick.trim();
@@ -66,10 +82,29 @@ export async function submitApplicationToFirestore(
     reviewedAt: '',
     reviewerNotes: '',
     createdProfileId: '',
+    publicCode: generatePublicCode(),
   };
 
   await setDoc(ref, record);
   return record;
+}
+
+function mapApplicationDoc(id: string, data: Record<string, unknown>): CandidateApplication {
+  return {
+    id: String(data.id || id),
+    nick: String(data.nick || ''),
+    cid: String(data.cid || ''),
+    phone: String(data.phone || ''),
+    discord: String(data.discord || ''),
+    docs: String(data.docs || ''),
+    status: (data.status as CandidateApplication['status']) || 'pending',
+    submittedAt: String(data.submittedAt || ''),
+    source: String(data.source || ''),
+    reviewedAt: String(data.reviewedAt || ''),
+    reviewerNotes: String(data.reviewerNotes || ''),
+    createdProfileId: String(data.createdProfileId || ''),
+    publicCode: String(data.publicCode || ''),
+  };
 }
 
 export async function fetchApplicationsFromFirestore(): Promise<CandidateApplication[]> {
@@ -77,22 +112,20 @@ export async function fetchApplicationsFromFirestore(): Promise<CandidateApplica
     query(collection(db, APPLICATIONS_COLLECTION), where('submittedAt', '>=', '0'))
   );
   return snap.docs
-    .map((d) => {
-      const data = d.data();
-      return {
-        id: String(data.id || d.id),
-        nick: String(data.nick || ''),
-        cid: String(data.cid || ''),
-        phone: String(data.phone || ''),
-        discord: String(data.discord || ''),
-        docs: String(data.docs || ''),
-        status: (data.status as CandidateApplication['status']) || 'pending',
-        submittedAt: String(data.submittedAt || ''),
-        source: String(data.source || ''),
-        reviewedAt: String(data.reviewedAt || ''),
-        reviewerNotes: String(data.reviewerNotes || ''),
-        createdProfileId: String(data.createdProfileId || ''),
-      };
-    })
+    .map((d) => mapApplicationDoc(d.id, d.data() as Record<string, unknown>))
     .sort((a, b) => b.submittedAt.localeCompare(a.submittedAt));
+}
+
+/** Статус заявки по коду AP-XXXXXX (ввод допускает пробелы и строчные буквы). */
+export async function findApplicationByCode(
+  code: string
+): Promise<CandidateApplication | null> {
+  const normalized = code.trim().toUpperCase();
+  if (!/^AP-[A-Z0-9]{6}$/.test(normalized)) return null;
+  const snap = await getDocs(
+    query(collection(db, APPLICATIONS_COLLECTION), where('publicCode', '==', normalized))
+  );
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  return mapApplicationDoc(d.id, d.data() as Record<string, unknown>);
 }

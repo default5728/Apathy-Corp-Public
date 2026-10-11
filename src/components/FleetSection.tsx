@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { Truck, X } from 'lucide-react';
+import { fetchPublicFleet, type PublicFleetItem } from '../lib/corpFirebase';
 
 interface VehicleCard {
   id: string;
@@ -9,6 +10,7 @@ interface VehicleCard {
   desc: string;
 }
 
+// Дефолтный список — показывается только пока облако недоступно или автопарк пуст.
 const VEHICLES: VehicleCard[] = [
   {
     id: '1',
@@ -47,8 +49,48 @@ const VEHICLES: VehicleCard[] = [
   },
 ];
 
+const toCard = (v: PublicFleetItem): VehicleCard => ({
+  id: v.id,
+  title: v.modelName,
+  subtitle:
+    v.trunkKg > 0
+      ? `${v.trunkKg.toLocaleString('ru-RU')} КГ ВМЕСТИМОСТЬ`
+      : `БОРТ ${v.plate || '—'}`,
+  imgSrc: v.image,
+  desc:
+    v.desc ||
+    [v.slot && `Стоянка: ${v.slot}`, v.rankRequired && `Доступ: ${v.rankRequired}`]
+      .filter(Boolean)
+      .join(' · ') ||
+    'Корпоративный транспорт.',
+});
+
+const CarPlaceholder: React.FC<{ className?: string }> = ({ className }) => (
+  <div
+    className={`flex items-center justify-center bg-black/40 ${className || ''}`}
+    style={{ aspectRatio: '16/9' }}
+  >
+    <Truck className="w-10 h-10 text-zinc-600" />
+  </div>
+);
+
 export const FleetSection: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<VehicleCard | null>(null);
+  const [cars, setCars] = useState<VehicleCard[]>(VEHICLES);
+
+  // Автопарк синхронизируется с порталом (Firestore fleet, publicVisible);
+  // при ошибке сети остаётся дефолтный список.
+  useEffect(() => {
+    let alive = true;
+    fetchPublicFleet()
+      .then((items) => {
+        if (alive && items.length > 0) setCars(items.map(toCard));
+      })
+      .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
 
   return (
     <section className="gallery-section my-16 fade-in-up delay-5">
@@ -57,13 +99,13 @@ export const FleetSection: React.FC = () => {
       </h2>
 
       <div className="gallery-grid">
-        {VEHICLES.map((v) => (
+        {cars.map((v) => (
           <div
             key={v.id}
             onClick={() => setSelectedImg(v)}
             className="gallery-item"
           >
-            <img src={v.imgSrc} alt={v.title} loading="lazy" />
+            {v.imgSrc ? <img src={v.imgSrc} alt={v.title} loading="lazy" /> : <CarPlaceholder />}
             <div className="car-title">
               {v.title}
               <span className="block text-[0.65rem] tracking-[0.25em] opacity-70 mt-1" style={{ fontFamily: 'Jura, sans-serif' }}>
@@ -90,11 +132,15 @@ export const FleetSection: React.FC = () => {
             >
               <X className="w-5 h-5" />
             </button>
-            <img
-              src={selectedImg.imgSrc}
-              alt={selectedImg.title}
-              className="w-full max-h-[70vh] object-contain bg-black"
-            />
+            {selectedImg.imgSrc ? (
+              <img
+                src={selectedImg.imgSrc}
+                alt={selectedImg.title}
+                className="w-full max-h-[70vh] object-contain bg-black"
+              />
+            ) : (
+              <CarPlaceholder className="max-h-[70vh]" />
+            )}
             <div className="p-6 bg-zinc-950 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <span className="text-xs text-[#738299] font-mono tracking-widest uppercase">

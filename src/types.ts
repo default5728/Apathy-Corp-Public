@@ -14,6 +14,8 @@ export interface CandidateApplication extends ApplicationFormData {
   reviewerNotes?: string;
   createdProfileId?: string;
   source: string;
+  /** Код вида AP-XXXXXX для проверки статуса на публичном сайте. */
+  publicCode?: string;
 }
 
 export interface CorporationMetrics {

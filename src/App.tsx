@@ -3,6 +3,8 @@ import { GalaxyIntro } from './components/GalaxyIntro';
 import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { IntelGrid } from './components/IntelGrid';
+import { CorpStatsSection } from './components/CorpStatsSection';
+import { ApplicationStatusSection } from './components/ApplicationStatusSection';
 import { FleetSection } from './components/FleetSection';
 import { GallerySections } from './components/GallerySections';
 import { ApplyModal } from './components/ApplyModal';
@@ -79,7 +81,7 @@ export default function App() {
   // Chrome can ignore the autoplay attribute until the element is re-triggered
   useEffect(() => {
     if (showIntro) return;
-    const video = document.querySelector('video.video-bg');
+    const video = document.querySelector<HTMLVideoElement>('video.video-bg');
     if (!video) return;
     video.play().catch(() => {});
     const onCanPlay = () => video.play().catch(() => {});
@@ -126,7 +128,9 @@ export default function App() {
                 onOpenApply={() => setIsApplyOpen(true)}
                 pendingCount={pendingAppsCount}
               />
+              <CorpStatsSection />
               <IntelGrid />
+              <ApplicationStatusSection />
               <FleetSection />
               <GallerySections />
             </div>

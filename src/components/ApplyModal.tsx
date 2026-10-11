@@ -117,6 +117,20 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     setSubmittedApp(created);
     setLoading(false);
 
+    // Discord-уведомление HR-отделу — best effort, заявка уже сохранена.
+    if (created.publicCode) {
+      fetch('/api/notify-discord', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          nick: created.nick,
+          cid: created.cid,
+          discord: created.discord,
+          publicCode: created.publicCode,
+        }),
+      }).catch(() => {});
+    }
+
     // Save to local storage for user backup
     try {
       const saved = JSON.parse(localStorage.getItem('apathy_my_applications') || '[]');
@@ -325,6 +339,22 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               Ваша заявка успешно отправлена на сервер корпорации APATHY и занесена в базу данных.
               Сотрудник HR-отдела проверит документы и свяжется с вами через Discord.
             </p>
+
+            {submittedApp.publicCode && (
+              <div className="w-full rounded-xl bg-cyan-950/30 border border-cyan-500/40 p-4 mb-6 flex items-center justify-between gap-3">
+                <div className="text-left">
+                  <div className="text-[10px] tracking-[0.25em] text-cyan-500/80 uppercase font-mono mb-1">
+                    Код проверки статуса
+                  </div>
+                  <div className="text-lg font-bold text-cyan-300 font-mono tracking-[0.2em]">
+                    {submittedApp.publicCode}
+                  </div>
+                </div>
+                <div className="text-[10px] text-zinc-500 max-w-[180px] leading-relaxed font-mono">
+                  Сохраните его — по нему вы сможете узнать статус заявки на главной странице.
+                </div>
+              </div>
+            )}
 
             {/* Application Summary Box */}
             <div className="w-full rounded-xl bg-black/60 border border-white/10 p-4 text-left font-mono text-xs space-y-2 mb-6">
