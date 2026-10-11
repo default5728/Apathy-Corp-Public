@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, ArrowLeft, Award, Crown } from 'lucide-react';
+import { ArrowLeft } from 'lucide-react';
 
 interface LeadersViewProps {
   onBack: () => void;
@@ -45,57 +45,38 @@ export const LeadersView: React.FC<LeadersViewProps> = ({ onBack }) => {
         <button
           onClick={onBack}
           type="button"
-          className="text-xs uppercase tracking-widest text-zinc-400 hover:text-white flex items-center gap-2 cursor-pointer font-['Bruno_Ace_SC',sans-serif] transition-all"
+          className="text-xs uppercase tracking-[0.2em] opacity-70 hover:opacity-100 transition-opacity duration-300 text-[#738299] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer font-['Jura',sans-serif]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>&lt; НАЗАД В ГЛАВНОЕ МЕНЮ</span>
         </button>
       </div>
 
-      <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-cyan-500/30 bg-cyan-950/20 text-cyan-300 text-xs font-mono uppercase tracking-widest mb-3">
-          <Crown className="w-3.5 h-3.5 text-cyan-400" />
-          <span>КОМАНДНЫЙ СОСТАВ КОРПОРАЦИИ</span>
-        </div>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-[0.2em] text-white uppercase font-['Bruno_Ace_SC',sans-serif]">
+      <section className="fade-in-up delay-1">
+        <h1 className="section-title" style={{ marginTop: '2rem' }}>
           РУКОВОДСТВО APATHY
         </h1>
-        <p className="text-xs text-zinc-400 mt-2 font-mono uppercase tracking-wider">
-          Высший командный состав и уполномоченные лица корпорации
-        </p>
-      </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-        {LEADERS.map((leader, idx) => (
-          <div
-            key={leader.name}
-            className="group relative rounded-2xl bg-zinc-950/80 border border-white/10 hover:border-cyan-400/50 p-6 flex flex-col items-center text-center transition-all duration-300 hover:shadow-[0_0_30px_rgba(34,211,238,0.2)]"
-          >
-            <div className="text-[11px] font-bold text-cyan-400 font-['Bruno_Ace_SC',sans-serif] tracking-widest uppercase mb-4">
-              {leader.role}
+        {LEADERS.map((leader) => (
+          <div key={leader.name} className="info-wrapper">
+            <div className="info-text info-text-top">{leader.role}</div>
+
+            <div className="info-image-container">
+              <img src={leader.image} alt={`${leader.name} Photo`} loading="lazy" />
             </div>
 
-            <div className="w-44 h-44 rounded-2xl overflow-hidden border-2 border-white/10 group-hover:border-cyan-400/60 transition-all duration-300 shadow-2xl mb-5">
-              <img
-                src={leader.image}
-                alt={leader.name}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            </div>
+            <div className="info-text info-text-bottom">{leader.name}</div>
 
-            <h3 className="text-lg font-bold text-white tracking-wider font-['Bruno_Ace_SC',sans-serif]">
-              {leader.name}
-            </h3>
-            <span className="text-[10px] text-zinc-500 font-mono tracking-widest uppercase mt-1 mb-3">
+            <div className="text-[0.7rem] text-[#5a677b] font-['Jura',sans-serif] tracking-[0.3em] uppercase mt-2">
               {leader.tag}
-            </span>
+            </div>
 
-            <p className="text-xs text-zinc-400 font-mono leading-relaxed mt-auto pt-3 border-t border-white/5">
+            <p className="max-w-xl text-center text-xs text-[#738299] font-mono leading-relaxed mt-3">
               {leader.bio}
             </p>
           </div>
         ))}
-      </div>
+      </section>
     </div>
   );
 };

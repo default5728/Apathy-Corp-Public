@@ -30,21 +30,21 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={() => onSelectTab('about')}
           type="button"
-          className={`nav-link cursor-pointer ${currentTab === 'about' ? 'text-white border-cyan-400/80 shadow-[0_0_15px_rgba(34,211,238,0.3)] bg-white/10' : ''}`}
+          className={`nav-link cursor-pointer ${currentTab === 'about' ? 'text-[#d1dce8] border-[#5a677b] shadow-[0_0_15px_rgba(90,103,123,0.35)] bg-white/5' : ''}`}
         >
           APATHY
         </button>
         <button
           onClick={() => onSelectTab('calc')}
           type="button"
-          className={`nav-link cursor-pointer ${currentTab === 'calc' ? 'text-white border-cyan-400/80 shadow-[0_0_15px_rgba(34,211,238,0.3)] bg-white/10' : ''}`}
+          className={`nav-link cursor-pointer ${currentTab === 'calc' ? 'text-[#d1dce8] border-[#5a677b] shadow-[0_0_15px_rgba(90,103,123,0.35)] bg-white/5' : ''}`}
         >
           КАЛЬКУЛЯТОР
         </button>
         <button
           onClick={() => onSelectTab('leaders')}
           type="button"
-          className={`nav-link cursor-pointer ${currentTab === 'leaders' ? 'text-white border-cyan-400/80 shadow-[0_0_15px_rgba(34,211,238,0.3)] bg-white/10' : ''}`}
+          className={`nav-link cursor-pointer ${currentTab === 'leaders' ? 'text-[#d1dce8] border-[#5a677b] shadow-[0_0_15px_rgba(90,103,123,0.35)] bg-white/5' : ''}`}
         >
           ЛИДЕРЫ
         </button>
@@ -55,14 +55,14 @@ export const Header: React.FC<HeaderProps> = ({
           onClick={onOpenSyncModal}
           type="button"
           title="Интеграция с порталом персонала (ac) и Firebase"
-          className="px-2.5 py-1 rounded-md border border-cyan-500/30 bg-cyan-950/20 hover:bg-cyan-900/30 text-[10px] text-cyan-300 flex items-center gap-1.5 tracking-wider font-mono transition-all cursor-pointer"
+          className="px-2.5 py-1 rounded-md border border-[rgba(115,130,153,0.35)] bg-white/[0.03] hover:bg-white/[0.07] hover:border-[#5a677b] text-[10px] text-[#738299] flex items-center gap-1.5 tracking-wider font-mono transition-all cursor-pointer"
         >
-          <Database className="w-3 h-3 text-cyan-400" />
+          <Database className="w-3 h-3" />
           <span className="hidden sm:inline">ШЛЮЗ API</span>
         </button>
 
         <div className="sys-status flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+          <span className="w-1.5 h-1.5 rounded-full bg-[#738299] animate-pulse" />
           <span>STATUS:</span>
           <span className="accent-text font-bold">ONLINE</span>
         </div>

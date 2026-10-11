@@ -2,7 +2,7 @@ import React from 'react';
 
 export const IntelGrid: React.FC = () => {
   return (
-    <section className="intel-grid my-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <section className="intel-grid my-12 fade-in-up delay-4 grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* 01: Критерии отбора */}
       <article className="data-block">
         <div className="block-header">

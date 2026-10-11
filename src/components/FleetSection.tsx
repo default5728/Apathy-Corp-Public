@@ -44,33 +44,24 @@ export const FleetSection: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<VehicleCard | null>(null);
 
   return (
-    <section className="gallery-section my-16">
+    <section className="gallery-section my-16 fade-in-up delay-5">
       <h2 className="section-title text-center text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase font-['Bruno_Ace_SC',sans-serif] mb-10">
         АВТОПАРК КОРПОРАЦИИ
       </h2>
 
-      <div className="gallery-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="gallery-grid">
         {VEHICLES.map((v) => (
           <div
             key={v.id}
             onClick={() => setSelectedImg(v)}
-            className="gallery-item group relative rounded-xl overflow-hidden border border-white/10 hover:border-cyan-400/50 transition-all duration-300 cursor-pointer bg-black/40 hover:shadow-[0_0_25px_rgba(34,211,238,0.2)]"
+            className="gallery-item"
           >
-            <div className="aspect-[16/10] overflow-hidden">
-              <img
-                src={v.imgSrc}
-                alt={v.title}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                loading="lazy"
-              />
-            </div>
-            <div className="p-4 bg-gradient-to-t from-black via-zinc-950/90 to-transparent">
-              <div className="text-[10px] text-cyan-400 font-mono tracking-widest uppercase mb-1">
+            <img src={v.imgSrc} alt={v.title} loading="lazy" />
+            <div className="car-title">
+              {v.title}
+              <span className="block text-[0.65rem] tracking-[0.25em] opacity-70 mt-1" style={{ fontFamily: 'Jura, sans-serif' }}>
                 {v.subtitle}
-              </div>
-              <h3 className="text-sm font-bold text-white tracking-wider font-['Bruno_Ace_SC',sans-serif]">
-                {v.title}
-              </h3>
+              </span>
             </div>
           </div>
         ))}
@@ -99,7 +90,7 @@ export const FleetSection: React.FC = () => {
             />
             <div className="p-6 bg-zinc-950 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <span className="text-xs text-cyan-400 font-mono tracking-widest uppercase">
+                <span className="text-xs text-[#738299] font-mono tracking-widest uppercase">
                   {selectedImg.subtitle}
                 </span>
                 <h4 className="text-lg font-bold text-white font-['Bruno_Ace_SC',sans-serif]">

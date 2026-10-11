@@ -4,12 +4,14 @@ import { Header } from './components/Header';
 import { HeroSection } from './components/HeroSection';
 import { IntelGrid } from './components/IntelGrid';
 import { FleetSection } from './components/FleetSection';
+import { GallerySections } from './components/GallerySections';
 import { ApplyModal } from './components/ApplyModal';
 import { CalculatorView } from './components/CalculatorView';
 import { LeadersView } from './components/LeadersView';
 import { AboutView } from './components/AboutView';
 import { StaffSyncModal } from './components/StaffSyncModal';
 import { fetchApplicationsFromFirestore } from './lib/firebase';
+import { useScrollReveal } from './lib/reveal';
 import { CandidateApplication } from './types';
 
 export default function App() {
@@ -18,6 +20,36 @@ export default function App() {
   const [isApplyOpen, setIsApplyOpen] = useState(false);
   const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [pendingAppsCount, setPendingAppsCount] = useState<number>(0);
+
+  useScrollReveal();
+
+  // Ambient cosmic flash dots (as in ac2 script.js)
+  useEffect(() => {
+    const container = document.createElement('div');
+    container.className = 'glitch-blocks';
+    document.body.appendChild(container);
+
+    const timer = setInterval(() => {
+      if (Math.random() > 0.6) {
+        const block = document.createElement('div');
+        block.className = 'glitch-block';
+        const size = Math.random() * 8 + 2;
+        block.style.width = `${size}px`;
+        block.style.height = `${size}px`;
+        block.style.top = `${Math.random() * 100}vh`;
+        block.style.left = `${Math.random() * 100}vw`;
+        container.appendChild(block);
+        setTimeout(() => {
+          if (container.contains(block)) container.removeChild(block);
+        }, 200);
+      }
+    }, 150);
+
+    return () => {
+      clearInterval(timer);
+      container.remove();
+    };
+  }, []);
 
   // Live count of applications still waiting for an HR decision
   useEffect(() => {
@@ -88,6 +120,7 @@ export default function App() {
               />
               <IntelGrid />
               <FleetSection />
+              <GallerySections />
             </div>
           </div>
         )}

@@ -37,3 +37,352 @@
   border-color: rgba(34, 211, 238, 0.6) !important;
   box-shadow: 0 0 20px rgba(34, 211, 238, 0.25) !important;
 }
+
+/* ============================================================
+   Калькулятор дохода — палитра и раскладка из ac2 (calc.html)
+   ============================================================ */
+.calc-wrapper {
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  backdrop-filter: blur(10px);
+  padding: 3rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 0 30px rgba(90, 103, 123, 0.1);
+}
+
+.calc-row {
+  display: grid;
+  grid-template-columns: 1.1fr 2fr auto 110px;
+  gap: 1.5rem;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.calc-row:last-of-type {
+  border-bottom: none;
+  margin-bottom: 3rem;
+}
+
+.res-name {
+  font-family: var(--font-display);
+  color: #d1dce8;
+  font-size: 0.95rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.res-price {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #5a677b;
+  letter-spacing: 0.08em;
+  margin-top: 0.25rem;
+}
+
+.res-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calc-input {
+  background: rgba(3, 4, 7, 0.6);
+  border: 1px solid #5a677b;
+  color: #d1dce8;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  padding: 0.5rem;
+  border-radius: 4px;
+  width: 80px;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.calc-input::-webkit-outer-spin-button,
+.calc-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.calc-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.calc-input:focus {
+  border-color: #d1dce8;
+  box-shadow: 0 0 10px rgba(209, 220, 232, 0.2);
+}
+
+.calc-chip {
+  background: rgba(3, 4, 7, 0.6);
+  border: 1px solid rgba(115, 130, 153, 0.35);
+  border-radius: 4px;
+  color: #738299;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.6rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.calc-chip:hover {
+  color: #d1dce8;
+  border-color: #5a677b;
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 12px rgba(90, 103, 123, 0.3);
+}
+
+.res-total {
+  font-family: 'Syncopate', sans-serif;
+  color: #738299;
+  font-size: 1rem;
+  text-align: right;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.calc-total-wrapper {
+  background: rgba(3, 4, 7, 0.8);
+  border: 1px solid #5a677b;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  transition: box-shadow 0.3s ease;
+}
+
+.calc-total-wrapper:hover {
+  box-shadow: 0 0 20px rgba(90, 103, 123, 0.3);
+}
+
+.total-label {
+  font-family: var(--font-display);
+  color: #5a677b;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.total-value {
+  font-family: 'Syncopate', sans-serif;
+  color: #ffffff;
+  font-size: 3rem;
+  font-weight: 700;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+  letter-spacing: 2px;
+  word-break: break-all;
+}
+
+.reset-btn-container {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .calc-wrapper {
+    padding: 2rem 1rem;
+  }
+  .calc-row {
+    grid-template-columns: 1fr auto;
+    gap: 1rem 0.5rem;
+  }
+  .res-slider-container {
+    grid-column: 1 / -1;
+  }
+  .res-controls {
+    grid-column: 1 / -1;
+  }
+  .res-total {
+    text-align: left;
+    font-size: 1.2rem;
+  }
+  .total-value {
+    font-size: 2rem;
+  }
+}
+
+/* Ползунок объёма — как в ac2 (calc.html) */
+.res-slider-container {
+  display: flex;
+  align-items: center;
+}
+
+input[type='range'].calc-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type='range'].calc-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 16px;
+  width: 16px;
+  border-radius: 50%;
+  background: #d1dce8;
+  margin-top: -6px;
+  box-shadow: 0 0 10px rgba(209, 220, 232, 0.5);
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+input[type='range'].calc-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+  background: #ffffff;
+}
+
+input[type='range'].calc-slider::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 4px;
+  background: #3b4759;
+  border-radius: 2px;
+}
+
+input[type='range'].calc-slider::-moz-range-thumb {
+  height: 16px;
+  width: 16px;
+  border: none;
+  border-radius: 50%;
+  background: #d1dce8;
+  box-shadow: 0 0 10px rgba(209, 220, 232, 0.5);
+}
+
+input[type='range'].calc-slider::-moz-range-track {
+  height: 4px;
+  background: #3b4759;
+  border-radius: 2px;
+}
+
+/* ============================================================
+   Лидеры — раскладка из ac2 (info.html)
+   ============================================================ */
+.info-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 2rem;
+  margin-bottom: 5rem;
+}
+
+.info-image-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem 0;
+  width: 100%;
+}
+
+.info-image-container img {
+  max-width: 100%;
+  height: auto;
+  max-height: 60vh;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 30px rgba(90, 103, 123, 0.4);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.info-image-container img:hover {
+  transform: scale(1.02);
+  box-shadow: 0 0 40px rgba(90, 103, 123, 0.6);
+}
+
+.info-text {
+  font-family: var(--font-display);
+  color: #5a677b;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: all 0.5s cubic-bezier(0.1, 0.9, 0.2, 1);
+  cursor: default;
+  text-shadow: 0 0 5px rgba(90, 103, 123, 0.1);
+}
+
+.info-text-top {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.info-text-bottom {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.info-text:hover {
+  color: #8fa0b8;
+  letter-spacing: 0.25em;
+  text-shadow: 0 0 15px rgba(143, 160, 184, 0.6), 0 0 30px rgba(143, 160, 184, 0.2);
+  transform: scale(1.05);
+}
+
+.back-btn-container {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  text-align: center;
+}
+
+/* ============================================================
+   О корпорации — раскладка из ac2 (about.html)
+   ============================================================ */
+.about-text-block {
+  background: rgba(255, 255, 255, 0.02);
+  border: 2px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 2rem;
+  margin-bottom: 3rem;
+  backdrop-filter: blur(5px);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--text-light);
+  text-align: justify;
+}
+
+.about-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+.about-gallery .gallery-item {
+  border: none;
+  background: transparent;
+}
+
+.about-gallery .gallery-item img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.about-gallery .gallery-item:hover img {
+  transform: scale(1.02);
+  border-color: #5a677b;
+  box-shadow: 0 0 20px rgba(90, 103, 123, 0.4);
+}
+
+@media (max-width: 768px) {
+  .about-text-block {
+    font-size: 0.95rem;
+    padding: 1.5rem;
+  }
+  .info-text-top {
+    font-size: 1.4rem;
+  }
+  .info-text-bottom {
+    font-size: 1.1rem;
+  }
+}
