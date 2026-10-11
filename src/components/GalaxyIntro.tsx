@@ -346,17 +346,7 @@ export const GalaxyIntro: React.FC<GalaxyIntroProps> = ({ onEnter }) => {
         <p className="mt-6 text-xs sm:text-sm uppercase tracking-[0.35em] text-zinc-400 font-light max-w-lg leading-relaxed">
           Эмоции мешают бизнесу. Корпорация на Radmir RP.
         </p>
-
-        <div className="mt-10 flex flex-col sm:flex-row items-center gap-4">
-          <button
-            onClick={onEnter}
-            type="button"
-            className="btn-apply group flex items-center gap-2.5 px-8 py-3.5 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-cyan-400 text-white text-xs font-bold tracking-[0.2em] uppercase transition-all duration-300 shadow-[0_0_20px_rgba(34,211,238,0.1)] hover:shadow-[0_0_30px_rgba(34,211,238,0.3)] cursor-pointer"
-          >
-            <span>ВОЙТИ В ПОРТАЛ</span>
-            <ArrowRight className="w-3.5 h-3.5 text-cyan-400 transition-transform duration-300 group-hover:translate-x-1" />
-          </button>
-        </div>
+        
       </div>
 
       {/* Bottom Hint */}
