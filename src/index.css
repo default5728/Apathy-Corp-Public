@@ -42,7 +42,7 @@
    Калькулятор дохода — палитра и раскладка из ac2 (calc.html)
    ============================================================ */
 .calc-wrapper {
-  background: rgba(255, 255, 255, 0.02);
+  background: transparent;
   border: 2px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   backdrop-filter: blur(10px);
@@ -385,4 +385,9 @@ input[type='range'].calc-slider::-moz-range-track {
   .info-text-bottom {
     font-size: 1.1rem;
   }
+}
+
+/* Keep label and value from colliding when the value wraps */
+.data-list li {
+  gap: 1rem;
 }

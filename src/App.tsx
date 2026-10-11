@@ -9,7 +9,6 @@ import { ApplyModal } from './components/ApplyModal';
 import { CalculatorView } from './components/CalculatorView';
 import { LeadersView } from './components/LeadersView';
 import { AboutView } from './components/AboutView';
-import { StaffSyncModal } from './components/StaffSyncModal';
 import { fetchApplicationsFromFirestore } from './lib/firebase';
 import { useScrollReveal } from './lib/reveal';
 import { CandidateApplication } from './types';
@@ -18,7 +17,6 @@ export default function App() {
   const [showIntro, setShowIntro] = useState(true);
   const [currentTab, setCurrentTab] = useState<'home' | 'calc' | 'leaders' | 'about'>('home');
   const [isApplyOpen, setIsApplyOpen] = useState(false);
-  const [isSyncModalOpen, setIsSyncModalOpen] = useState(false);
   const [pendingAppsCount, setPendingAppsCount] = useState<number>(0);
 
   useScrollReveal();
@@ -78,6 +76,17 @@ export default function App() {
     };
   }, []);
 
+  // Chrome can ignore the autoplay attribute until the element is re-triggered
+  useEffect(() => {
+    if (showIntro) return;
+    const video = document.querySelector('video.video-bg');
+    if (!video) return;
+    video.play().catch(() => {});
+    const onCanPlay = () => video.play().catch(() => {});
+    video.addEventListener('canplay', onCanPlay);
+    return () => video.removeEventListener('canplay', onCanPlay);
+  }, [showIntro]);
+
   const handleApplicationCreated = () => {
     setPendingAppsCount((prev) => prev + 1);
   };
@@ -87,7 +96,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030407] text-[#89949F] relative overflow-x-hidden flex flex-col font-mono">
+    <div className="min-h-screen text-[#89949F] relative overflow-x-hidden flex flex-col font-mono">
       {/* Background Video & CRT/Scanline Layers */}
       <video
         className="video-bg pointer-events-none"
@@ -105,7 +114,6 @@ export default function App() {
         currentTab={currentTab}
         onSelectTab={(tab) => setCurrentTab(tab)}
         onBackToIntro={() => setShowIntro(true)}
-        onOpenSyncModal={() => setIsSyncModalOpen(true)}
       />
 
       {/* Dynamic View based on currentTab */}
@@ -151,12 +159,6 @@ export default function App() {
         isOpen={isApplyOpen}
         onClose={() => setIsApplyOpen(false)}
         onApplicationCreated={handleApplicationCreated}
-      />
-
-      {/* Staff Sync Gateway Modal */}
-      <StaffSyncModal
-        isOpen={isSyncModalOpen}
-        onClose={() => setIsSyncModalOpen(false)}
       />
     </div>
   );
