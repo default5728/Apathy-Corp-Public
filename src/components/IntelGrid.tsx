@@ -33,17 +33,17 @@ export const IntelGrid: React.FC = () => {
           <ul className="data-list">
             <li>
               <span className="label">Автопарк:</span>
-              <span>4 машины элитного класса</span>
+              <span>Четыре машины элитного класса</span>
             </li>
             <li>
               <span className="label">База:</span>
-              <span>Дом *** (Особняк)</span>
+              <span>Дом ( Верхний Чумаш )</span>
             </li>
             <li className="block border-b-0 pb-0">
               <span className="label block mb-1">Заводы корпорации:</span>
               <div className="text-xs text-zinc-400 pl-2 space-y-0.5">
-                <div>• 1. Завод в Палето-Бэй</div>
-                <div>• 2. Завод в Ла-меса</div>
+                <div>• 1 Завод в Палето-Бэй</div>
+                <div>• 2 Завод в Ла-меса</div>
               </div>
             </li>
           </ul>
