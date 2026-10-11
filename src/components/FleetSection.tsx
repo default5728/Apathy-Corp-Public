@@ -42,7 +42,7 @@ const VEHICLES: VehicleCard[] = [
     id: '5',
     title: 'Rumpo Заказной',
     subtitle: 'Зарезервированный транспорт ( PNG later ) ',
-    imgSrc: '',
+    imgSrc: '/images/rumpo.png',
     desc: 'Скоростной фургон для сбора и доставки ресурсов. Доступен с 3-го ранга',
   },
 ];
