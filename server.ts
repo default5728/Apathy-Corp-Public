@@ -13,8 +13,8 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
-// Application storage file
-const DATA_DIR = path.join(__dirname, 'data');
+// Application storage file (supports local dev and Vercel serverless /tmp)
+const DATA_DIR = process.env.VERCEL ? path.join('/tmp', 'data') : path.join(__dirname, 'data');
 const APPLICATIONS_FILE = path.join(DATA_DIR, 'applications.json');
 
 if (!fs.existsSync(DATA_DIR)) {
@@ -331,4 +331,8 @@ async function startServer() {
   });
 }
 
-startServer();
+if (!process.env.VERCEL) {
+  startServer();
+}
+
+export default app;
