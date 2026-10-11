@@ -13,7 +13,7 @@ const RESOURCES: ResourceItem[] = [
   { id: 'stone', name: 'Камень', price: 5000, max: 1000, unit: 'шт' },
   { id: 'wood', name: 'Дерево', price: 2500, max: 1000, unit: 'шт' },
   { id: 'red_flowers', name: 'Красные цветы', price: 1500, max: 1000, unit: 'шт' },
-  { id: 'blue_flowers', name: 'Синие цветы', price: 1400, max: 1000, unit: 'шт' },
+  { id: 'blue_flowers', name: 'Синие цветы', price: 1500, max: 1000, unit: 'шт' },
   { id: 'pink_flowers', name: 'Розовые цветы', price: 1500, max: 1000, unit: 'шт' },
 ];
 
