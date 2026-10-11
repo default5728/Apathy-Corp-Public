@@ -192,7 +192,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             {/* 01. Nick */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="nick" className="form-label text-[11px]">
-                <span className="text-[#738299]">01.</span> НИК В ИГРЕ
+                <span className="text-[#738299]">01 </span> НИК В ИГРЕ
               </label>
               <input
                 id="nick"
@@ -209,7 +209,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             {/* 02. CID */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="cid" className="form-label text-[11px]">
-                <span className="text-[#738299]">02.</span> CID ПЕРСОНАЖА
+                <span className="text-[#738299]">02 </span> CID ПЕРСОНАЖА
               </label>
               <input
                 id="cid"
@@ -226,7 +226,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             {/* 03. Phone */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="phone" className="form-label text-[11px]">
-                <span className="text-[#738299]">03.</span> НОМЕР ТЕЛЕФОНА
+                <span className="text-[#738299]">03 </span> НОМЕР ТЕЛЕФОНА (ИГРОВОЙ)
               </label>
               <input
                 id="phone"
@@ -243,7 +243,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             {/* 04. Discord (THE REQUESTED FIELD) */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="discord" className="form-label text-[11px] text-cyan-400">
-                <span className="text-cyan-400 font-bold">04.</span> DISCORD
+                <span className="text-cyan-400 font-bold">04</span> DISCORD
                 <span className="text-[10px] text-cyan-400/70 normal-case ml-1 tracking-normal font-sans">
                   (для связи с HR-отделом)
                 </span>
@@ -254,7 +254,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 type="text"
                 value={formData.discord}
                 onChange={handleChange}
-                placeholder="Например: apathy_operative#0000 или username"
+                placeholder="Например: apathy#0000 или username"
                 required
                 className="form-input text-sm border-cyan-500/40 bg-[#0d1420]/80 text-white field-glow"
               />
@@ -263,7 +263,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             {/* 05. Docs link */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="docs" className="form-label text-[11px]">
-                <span className="text-[#738299]">05.</span> СКРИН ДОКУМЕНТОВ (ССЫЛКА)
+                <span className="text-[#738299]">05</span> СКРИН ДОКУМЕНТОВ (ССЫЛКА)
               </label>
               <input
                 id="docs"
