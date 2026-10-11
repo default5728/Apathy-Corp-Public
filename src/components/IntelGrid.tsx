@@ -2,7 +2,7 @@ import React from 'react';
 
 export const IntelGrid: React.FC = () => {
   return (
-    <section className="intel-grid my-12 fade-in-up delay-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <section className="intel-grid !my-12 fade-in-up delay-4 grid grid-cols-1 md:grid-cols-3 gap-6">
       {/* 01: Критерии отбора */}
       <article className="data-block">
         <div className="block-header">
@@ -40,8 +40,8 @@ export const IntelGrid: React.FC = () => {
               <span>Дом ( Верхний Чумаш )</span>
             </li>
             <li className="block border-b-0 pb-0">
-              <span className="label block mb-1">Заводы корпорации:</span>
-              <div className="text-xs text-zinc-400 pl-2 space-y-0.5">
+              <span className="label block !mb-1">Заводы корпорации:</span>
+              <div className="text-xs text-zinc-400 pl-2 !space-y-0.5">
                 <div>• 1 Завод в Палето-Бэй</div>
                 <div>• 2 Завод в Ла-меса</div>
               </div>

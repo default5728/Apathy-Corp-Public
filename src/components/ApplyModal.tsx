@@ -163,18 +163,18 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#04060a]/90 backdrop-blur-md animate-fadeIn"
+      className="fixed inset-0 z-50 flex items-center justify-center !p-4 sm:!p-6 bg-black/45 backdrop-blur-md animate-fadeIn"
       aria-modal="true"
       role="dialog"
     >
-      <div className="relative w-full max-w-[580px] bg-gradient-to-b from-[#10151e] to-[#090c12] border border-[#738299]/35 rounded-2xl shadow-[0_25px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(90,103,123,0.18)] overflow-hidden">
+      <div className="glass-panel relative w-full max-w-[580px] bg-white/[0.04] backdrop-blur-md border-2 border-white/[0.08] rounded-lg shadow-[0_25px_70px_rgba(0,0,0,0.55),0_0_40px_rgba(34,211,238,0.08)] overflow-hidden">
         {/* Glowing top line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#738299] to-transparent" />
 
         {/* Header */}
-        <div className="flex items-start justify-between px-6 sm:px-8 pt-7 pb-5 border-b border-white/5">
+        <div className="flex items-start justify-between !px-6 sm:!px-8 !pt-7 !pb-5 border-b border-white/[0.08]">
           <div>
-            <div className="text-[10px] tracking-[0.25em] text-[#89949f] uppercase mb-1 font-['Bruno_Ace_SC',sans-serif]">
+            <div className="text-[10px] tracking-[0.25em] text-[#89949f] uppercase !mb-1 font-['Bruno_Ace_SC',sans-serif]">
               RECRUITMENT // СИСТЕМА ЗАЯВОК
             </div>
             <h2 className="text-xl sm:text-2xl font-bold tracking-[0.15em] text-white uppercase font-['Bruno_Ace_SC',sans-serif]">
@@ -194,7 +194,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
 
         {/* Error message */}
         {error && (
-          <div className="mx-6 sm:mx-8 mt-4 p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 flex items-center gap-2 text-rose-300 text-xs font-mono">
+          <div className="mx-6 sm:mx-8 !mt-4 !p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 flex items-center gap-2 text-rose-300 text-xs font-mono">
             <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
             <span>{error}</span>
           </div>
@@ -202,7 +202,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
 
         {/* Form View */}
         {!submittedApp ? (
-          <form onSubmit={handleSubmit} className="p-6 sm:p-8 flex flex-col gap-4 font-mono">
+          <form onSubmit={handleSubmit} className="!p-6 sm:!p-8 flex flex-col gap-5 font-mono">
             {/* 01. Nick */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="nick" className="form-label text-[11px]">
@@ -270,7 +270,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 onChange={handleChange}
                 placeholder="Например: apathy#0000 или username"
                 required
-                className="form-input text-sm border-cyan-500/40 bg-[#0d1420]/80 text-white field-glow"
+                className="form-input text-sm border-cyan-500/40 text-white field-glow"
               />
             </div>
 
@@ -292,11 +292,11 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             </div>
 
             {/* Submit Action */}
-            <div className="mt-3">
+            <div className="!mt-3">
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full btn-submit-apply flex items-center justify-center gap-2 py-3.5 rounded-full cursor-pointer transition-all duration-300 disabled:opacity-50"
+                className="w-full btn-submit-apply flex items-center justify-center gap-2 !py-3.5 rounded-full cursor-pointer transition-all duration-300 disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -314,13 +314,13 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
           </form>
         ) : (
           /* Success state - Note that Discord buttons are completely removed! */
-          <div className="p-6 sm:p-8 flex flex-col items-center text-center animate-fadeIn">
-            <div className="w-14 h-14 rounded-full bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center mb-4 text-cyan-400 shadow-[0_0_25px_rgba(34,211,238,0.3)]">
+          <div className="!p-6 sm:!p-8 flex flex-col items-center text-center animate-fadeIn">
+            <div className="w-14 h-14 rounded-full bg-cyan-400/10 border border-cyan-400/40 flex items-center justify-center !mb-4 text-cyan-300 shadow-[0_0_25px_rgba(34,211,238,0.25)]">
               <CheckCircle2 className="w-7 h-7" />
             </div>
 
             <div
-              className={`inline-block px-3.5 py-1 rounded-full border text-[10px] tracking-widest font-mono uppercase mb-2 ${
+              className={`inline-block !px-3.5 !py-1 rounded-full border text-[10px] tracking-widest font-mono uppercase !mb-2 ${
                 handedToHr
                   ? 'border-emerald-500/40 bg-emerald-950/30 text-emerald-300'
                   : 'border-amber-500/40 bg-amber-950/30 text-amber-300'
@@ -331,19 +331,19 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 : 'ВНИМАНИЕ · ЗАЯВКА СОХРАНЕНА БЕЗ ОБЩЕЙ БАЗЫ, HR ЕЁ НЕ УВИДИТ'}
             </div>
 
-            <h3 className="text-lg font-bold text-white uppercase tracking-wider font-['Bruno_Ace_SC',sans-serif] mb-2">
+            <h3 className="text-lg font-bold text-white uppercase tracking-wider font-['Bruno_Ace_SC',sans-serif] !mb-2">
               АНКЕТА ПЕРЕДАНА РУКОВОДСТВУ
             </h3>
 
-            <p className="text-xs text-[#89949f] leading-relaxed max-w-md mb-5 font-mono">
+            <p className="text-xs text-[#89949f] leading-relaxed max-w-md !mb-5 font-mono">
               Ваша заявка успешно отправлена на сервер корпорации APATHY и занесена в базу данных.
               Сотрудник HR-отдела проверит документы и свяжется с вами через Discord.
             </p>
 
             {submittedApp.publicCode && (
-              <div className="w-full rounded-xl bg-cyan-950/30 border border-cyan-500/40 p-4 mb-6 flex items-center justify-between gap-3">
+              <div className="w-full rounded-xl bg-cyan-400/10 border border-cyan-400/30 !p-4 !mb-6 flex items-center justify-between gap-3">
                 <div className="text-left">
-                  <div className="text-[10px] tracking-[0.25em] text-cyan-500/80 uppercase font-mono mb-1">
+                  <div className="text-[10px] tracking-[0.25em] text-cyan-500/80 uppercase font-mono !mb-1">
                     Код проверки статуса
                   </div>
                   <div className="text-lg font-bold text-cyan-300 font-mono tracking-[0.2em]">
@@ -357,8 +357,8 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
             )}
 
             {/* Application Summary Box */}
-            <div className="w-full rounded-xl bg-black/60 border border-white/10 p-4 text-left font-mono text-xs space-y-2 mb-6">
-              <div className="flex justify-between items-center pb-2 border-b border-white/10 text-[11px] text-zinc-400">
+            <div className="w-full rounded-xl bg-white/[0.04] backdrop-blur-md border border-white/10 !p-4 text-left font-mono text-xs !space-y-2 !mb-6">
+              <div className="flex justify-between items-center !pb-2 border-b border-white/10 text-[11px] text-zinc-400">
                 <span className="flex items-center gap-1.5 text-cyan-400">
                   <Database className="w-3.5 h-3.5" />
                   ID заявки: <strong className="text-white">{submittedApp.id}</strong>
@@ -368,7 +368,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 gap-y-2 pt-1 text-[11px]">
+              <div className="grid grid-cols-2 gap-y-2 !pt-1 text-[11px]">
                 <div>
                   <span className="text-zinc-500">Ник: </span>
                   <span className="text-white font-medium">{submittedApp.nick}</span>
@@ -387,7 +387,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 </div>
               </div>
 
-              <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[11px]">
+              <div className="!pt-2 border-t border-white/[0.08] flex items-center justify-between text-[11px]">
                 <span className="text-zinc-500 truncate max-w-[240px]">
                   Документы: {submittedApp.docs}
                 </span>
@@ -408,7 +408,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               <button
                 type="button"
                 onClick={handleReset}
-                className="flex-1 py-3 px-4 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-cyan-400/50 text-white text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 !py-3 !px-4 rounded-full border border-white/20 bg-white/5 hover:bg-white/10 hover:border-cyan-400/50 text-white text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
                 <RotateCcw className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Заполнить ещё одну</span>
@@ -417,7 +417,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="flex-1 py-3 px-4 rounded-full border border-cyan-500/50 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-200 text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.15)]"
+                className="flex-1 !py-3 !px-4 rounded-full border border-cyan-500/50 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-200 text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer shadow-[0_0_15px_rgba(34,211,238,0.15)]"
               >
                 <Check className="w-3.5 h-3.5 text-cyan-400" />
                 <span>Готово</span>

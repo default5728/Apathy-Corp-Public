@@ -45,7 +45,7 @@ export const LeadersView: React.FC<LeadersViewProps> = ({ onBack }) => {
         <button
           onClick={onBack}
           type="button"
-          className="text-xs uppercase tracking-[0.2em] opacity-70 hover:opacity-100 transition-opacity duration-300 text-[#738299] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer font-['Jura',sans-serif]"
+          className="back-link text-xs uppercase tracking-[0.2em] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer font-['Jura',sans-serif]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>&lt; НАЗАД В ГЛАВНОЕ МЕНЮ</span>
@@ -53,7 +53,7 @@ export const LeadersView: React.FC<LeadersViewProps> = ({ onBack }) => {
       </div>
 
       <section className="fade-in-up delay-1">
-        <h1 className="section-title" style={{ marginTop: '2rem' }}>
+        <h1 className="section-title !mb-4" style={{ marginTop: '2rem' }}>
           РУКОВОДСТВО APATHY
         </h1>
 
@@ -67,11 +67,11 @@ export const LeadersView: React.FC<LeadersViewProps> = ({ onBack }) => {
 
             <div className="info-text info-text-bottom">{leader.name}</div>
 
-            <div className="text-[0.7rem] text-[#5a677b] font-['Jura',sans-serif] tracking-[0.3em] uppercase mt-2">
+            <div className="text-[0.7rem] text-[#5a677b] font-['Jura',sans-serif] tracking-[0.3em] uppercase !mt-2">
               {leader.tag}
             </div>
 
-            <p className="max-w-xl text-center text-xs text-[#738299] font-mono leading-relaxed mt-3">
+            <p className="max-w-xl text-center text-xs text-[#738299] font-mono leading-relaxed !mt-3">
               {leader.bio}
             </p>
           </div>

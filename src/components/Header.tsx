@@ -17,7 +17,7 @@ export const Header: React.FC<HeaderProps> = ({
         <button
           onClick={onBackToIntro}
           type="button"
-          className="text-inherit no-underline opacity-70 hover:opacity-100 transition-opacity duration-300 font-['Bruno_Ace_SC',sans-serif] text-xs cursor-pointer flex items-center gap-1.5"
+          className="back-link text-inherit no-underline hover:text-[#d1dce8] transition-colors duration-300 font-['Bruno_Ace_SC',sans-serif] text-xs cursor-pointer flex items-center gap-1.5"
         >
           <span>&lt; BACK</span>
         </button>

@@ -31,7 +31,7 @@ export const CorpStatsSection: React.FC = () => {
   ];
 
   return (
-    <section className="my-12 fade-in-up">
+    <section className="!my-12 fade-in-up">
       <article className="data-block">
         <div className="block-header">
           <span className="block-id">00</span>
@@ -40,20 +40,20 @@ export const CorpStatsSection: React.FC = () => {
         <div className="block-content">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
             {cells.map((c) => (
-              <div key={c.label} className="p-4 rounded-xl bg-black/40 border border-white/5">
+              <div key={c.label} className="!p-4 rounded-xl bg-black/40 border border-white/5">
                 <div className="text-[10px] tracking-[0.25em] text-zinc-500 uppercase font-mono">
                   {c.label}
                 </div>
-                <div className="text-xl font-bold text-white font-['Bruno_Ace_SC',sans-serif] mt-2 break-words">
+                <div className="text-xl font-bold text-white font-['Bruno_Ace_SC',sans-serif] !mt-2 break-words">
                   {c.value}
                 </div>
               </div>
             ))}
-            <div className="p-4 rounded-xl bg-black/40 border border-white/5">
+            <div className="!p-4 rounded-xl bg-black/40 border border-white/5">
               <div className="text-[10px] tracking-[0.25em] text-zinc-500 uppercase font-mono">
                 Сейчас в сети
               </div>
-              <div className="text-xl font-bold text-white font-['Bruno_Ace_SC',sans-serif] mt-2 flex items-center gap-2">
+              <div className="text-xl font-bold text-white font-['Bruno_Ace_SC',sans-serif] !mt-2 flex items-center gap-2">
                 <span className="relative flex h-2.5 w-2.5 shrink-0">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60" />
                   <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />

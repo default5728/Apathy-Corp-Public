@@ -48,14 +48,14 @@ export const ApplicationStatusSection: React.FC = () => {
   };
 
   return (
-    <section className="my-12 fade-in-up">
+    <section className="!my-12 fade-in-up">
       <article className="data-block">
         <div className="block-header">
           <span className="block-id">04</span>
           <h2 className="block-title">Статус заявки</h2>
         </div>
         <div className="block-content">
-          <p className="text-xs text-zinc-400 leading-relaxed font-mono mb-4">
+          <p className="text-xs text-zinc-400 leading-relaxed font-mono !mb-4">
             Введите код, который вы получили после отправки заявки (формат AP-XXXXXX), чтобы
             узнать её текущий статус.
           </p>
@@ -72,7 +72,7 @@ export const ApplicationStatusSection: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="py-2.5 px-6 rounded-full border border-cyan-500/50 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-200 text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+              className="!py-2.5 !px-6 rounded-full border border-cyan-500/50 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-200 text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {loading ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
@@ -84,13 +84,13 @@ export const ApplicationStatusSection: React.FC = () => {
           </form>
 
           {error && (
-            <div className="mt-4 p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs font-mono">
+            <div className="!mt-4 p-3 rounded-lg bg-rose-950/40 border border-rose-500/40 text-rose-300 text-xs font-mono">
               {error}
             </div>
           )}
 
           {result === 'not_found' && (
-            <div className="mt-4 p-3 rounded-lg bg-zinc-900/60 border border-white/10 text-zinc-400 text-xs font-mono">
+            <div className="!mt-4 p-3 rounded-lg bg-zinc-900/60 border border-white/10 text-zinc-400 text-xs font-mono">
               Заявка с таким кодом не найдена. Проверьте код — он был показан после отправки
               анкеты.
             </div>
@@ -98,7 +98,7 @@ export const ApplicationStatusSection: React.FC = () => {
 
           {result && result !== 'not_found' && (
             <div
-              className={`mt-4 p-4 rounded-xl border text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
+              className={`!mt-4 p-4 rounded-xl border text-xs font-mono flex flex-col sm:flex-row sm:items-center justify-between gap-2 ${
                 STATUS_META[result.status].className
               }`}
             >

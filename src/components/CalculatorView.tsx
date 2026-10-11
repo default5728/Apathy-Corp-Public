@@ -63,20 +63,20 @@ export const CalculatorView: React.FC<CalculatorViewProps> = ({ onBack }) => {
         <button
           onClick={onBack}
           type="button"
-          className="text-xs uppercase tracking-[0.2em] opacity-70 hover:opacity-100 transition-opacity duration-300 font-['Jura',sans-serif] text-[#738299] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer"
+          className="back-link text-xs uppercase tracking-[0.2em] font-['Jura',sans-serif] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>&lt; НАЗАД В ГЛАВНОЕ МЕНЮ</span>
         </button>
       </div>
 
-      <div className="text-center mb-10">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded border border-[rgba(115,130,153,0.3)] bg-white/[0.02] backdrop-blur-sm text-[#738299] text-[0.7rem] font-['Jura',sans-serif] uppercase tracking-[0.3em] mb-4">
+      <div className="text-center !mb-10">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded border border-[rgba(115,130,153,0.3)] bg-white/[0.02] backdrop-blur-sm text-[#738299] text-[0.7rem] font-['Jura',sans-serif] uppercase tracking-[0.3em] !mb-4">
           <Calculator className="w-3.5 h-3.5" />
           <span>Тарифная сетка Radmir RP</span>
         </div>
-        <h1 className="section-title !mb-4 text-[#d1dce8]">КАЛЬКУЛЯТОР ДОХОДА</h1>
-        <p className="text-xs text-[#5a677b] mt-2 font-mono uppercase tracking-wider">
+        <h1 className="section-title !mb-3 text-[#d1dce8]">КАЛЬКУЛЯТОР ДОХОДА</h1>
+        <p className="subtitle-note text-xs !mb-10 font-mono uppercase tracking-wider">
           Расчёт мгновенной выплаты за сдачу добытых ресурсов на склад APATHY CORP
         </p>
       </div>

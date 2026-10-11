@@ -93,8 +93,8 @@ export const FleetSection: React.FC = () => {
   }, []);
 
   return (
-    <section className="gallery-section my-16 fade-in-up delay-5">
-      <h2 className="section-title text-center text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase font-['Bruno_Ace_SC',sans-serif] mb-10">
+    <section className="gallery-section !my-16 fade-in-up delay-5">
+      <h2 className="section-title text-center text-xl sm:text-2xl font-bold tracking-[0.2em] uppercase font-['Bruno_Ace_SC',sans-serif] !mb-10">
         АВТОПАРК КОРПОРАЦИИ
       </h2>
 
@@ -108,7 +108,7 @@ export const FleetSection: React.FC = () => {
             {v.imgSrc ? <img src={v.imgSrc} alt={v.title} loading="lazy" /> : <CarPlaceholder />}
             <div className="car-title">
               {v.title}
-              <span className="block text-[0.65rem] tracking-[0.25em] opacity-70 mt-1" style={{ fontFamily: 'Jura, sans-serif' }}>
+              <span className="block text-[0.65rem] tracking-[0.25em] opacity-70 !mt-1" style={{ fontFamily: 'Jura, sans-serif' }}>
                 {v.subtitle}
               </span>
             </div>
@@ -124,7 +124,7 @@ export const FleetSection: React.FC = () => {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative max-w-4xl w-full bg-zinc-950 border border-white/15 rounded-2xl overflow-hidden shadow-2xl cursor-default"
+            className="relative max-w-4xl w-full bg-white/[0.04] backdrop-blur-md border-2 border-white/[0.08] rounded-lg overflow-hidden shadow-[0_25px_70px_rgba(0,0,0,0.55)] cursor-default"
           >
             <button
               onClick={() => setSelectedImg(null)}
@@ -141,7 +141,7 @@ export const FleetSection: React.FC = () => {
             ) : (
               <CarPlaceholder className="max-h-[70vh]" />
             )}
-            <div className="p-6 bg-zinc-950 border-t border-white/10 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="!p-6 bg-black/25 backdrop-blur-md border-t border-white/[0.08] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
                 <span className="text-xs text-[#738299] font-mono tracking-widest uppercase">
                   {selectedImg.subtitle}
@@ -149,7 +149,7 @@ export const FleetSection: React.FC = () => {
                 <h4 className="text-lg font-bold text-white font-['Bruno_Ace_SC',sans-serif]">
                   {selectedImg.title}
                 </h4>
-                <p className="text-xs text-zinc-400 font-mono mt-1">{selectedImg.desc}</p>
+                <p className="text-xs text-zinc-400 font-mono !mt-1">{selectedImg.desc}</p>
               </div>
             </div>
           </div>

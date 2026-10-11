@@ -25,7 +25,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack, onOpenApply }) => 
         <button
           onClick={onBack}
           type="button"
-          className="text-xs uppercase tracking-[0.2em] opacity-70 hover:opacity-100 transition-opacity duration-300 text-[#738299] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer font-['Jura',sans-serif]"
+          className="back-link text-xs uppercase tracking-[0.2em] hover:text-[#d1dce8] flex items-center gap-2 cursor-pointer font-['Jura',sans-serif]"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>&lt; НАЗАД В ГЛАВНОЕ МЕНЮ</span>
@@ -33,16 +33,16 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack, onOpenApply }) => 
       </div>
 
       <div className="fade-in-up delay-1">
-        <h1 className="section-title" style={{ marginTop: '2rem' }}>
+        <h1 className="section-title !mb-3" style={{ marginTop: '2rem' }}>
           О КОРПОРАЦИИ APATHY
         </h1>
-        <p className="text-xs text-[#5a677b] -mt-6 mb-8 text-center font-mono uppercase tracking-wider">
+        <p className="subtitle-note text-xs !mb-10 text-center font-mono uppercase tracking-wider">
           Эмоции мешают бизнесу. Корпорация на сервере Radmir GTA 5 RP.
         </p>
       </div>
 
       {/* Story Card */}
-      <div className="about-text-block fade-in-up delay-2 text-xs sm:text-sm font-mono space-y-4">
+      <div className="about-text-block fade-in-up delay-2 text-xs sm:text-sm font-mono !space-y-4">
         <p>
           <strong className="text-white font-semibold">Apathy Corp</strong> — корпорация на сервере Radmir RP, созданная для тех, кто хочет стабильно и честно зарабатывать в спокойной атмосфере без лишней драмы.
         </p>
@@ -55,7 +55,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack, onOpenApply }) => 
       </div>
 
       {/* Facilities Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12 fade-in-up delay-3">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 !mb-12 fade-in-up delay-3">
         <div className="data-block !p-5 flex flex-col items-start gap-2">
           <Factory className="w-5 h-5 text-[#738299]" />
           <h4 className="text-sm font-bold text-[#d1dce8] font-['Bruno_Ace_SC',sans-serif]">
@@ -88,7 +88,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack, onOpenApply }) => 
       </div>
 
       {/* Gallery Section */}
-      <div className="mb-12 fade-in-up delay-4">
+      <div className="!mb-12 fade-in-up delay-4">
         <h3 className="section-title">ГАЛЕРЕЯ КОРПОРАЦИИ</h3>
 
         <div className="about-gallery">
@@ -109,7 +109,7 @@ export const AboutView: React.FC<AboutViewProps> = ({ onBack, onOpenApply }) => 
       </div>
 
       {/* CTA Box */}
-      <div className="data-block !p-8 text-center flex flex-col items-center gap-4 mb-12 fade-in-up delay-5">
+      <div className="data-block !p-8 text-center flex flex-col items-center gap-4 !mb-12 fade-in-up delay-5">
         <h3 className="text-lg font-bold text-[#d1dce8] font-['Bruno_Ace_SC',sans-serif] uppercase tracking-wider">
           ГОТОВЫ ПРИСОЕДИНИТЬСЯ К НАМ?
         </h3>

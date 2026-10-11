@@ -8,9 +8,9 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApply, pendingCount = 0 }) => {
   return (
-    <section className="hero relative my-16 sm:my-24 text-center">
+    <section className="hero relative !my-16 sm:!my-24 text-center">
       {/* Glitch Main Title */}
-      <div className="flex justify-center w-full mb-4 fade-in-up delay-1">
+      <div className="flex justify-center w-full !mb-4 fade-in-up delay-1">
         <h1
           style={{ fontFamily: "'Space Age', sans-serif" }}
           className="glitch-title"
@@ -25,7 +25,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApply, pendingCo
       </p>
 
       {/* Hero Actions (Notice: Empty "_" button is removed completely as requested!) */}
-      <div className="hero-actions flex gap-4 justify-center items-center flex-wrap mt-8 fade-in-up delay-3">
+      <div className="hero-actions flex gap-4 justify-center items-center flex-wrap !mt-8 fade-in-up delay-3">
         <button
           type="button"
           onClick={onOpenApply}
@@ -40,7 +40,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenApply, pendingCo
       </div>
 
       {pendingCount > 0 && (
-        <div className="mt-5 inline-flex items-center gap-2 px-4 py-1.5 rounded border border-[rgba(115,130,153,0.3)] bg-white/[0.02] backdrop-blur-sm text-[10px] text-[#738299] font-['Jura',sans-serif] tracking-[0.2em] uppercase">
+        <div className="!mt-5 inline-flex items-center gap-2 px-4 py-1.5 rounded border border-[rgba(115,130,153,0.3)] bg-white/[0.02] backdrop-blur-sm text-[10px] text-[#738299] font-['Jura',sans-serif] tracking-[0.2em] uppercase">
           <span className="w-1.5 h-1.5 rounded-full bg-[#738299] animate-pulse" />
           <span>В базе: {pendingCount} заявок на рассмотрении</span>
         </div>
