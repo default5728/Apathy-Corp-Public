@@ -100,6 +100,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const reason = clean(body.reason, 500) || 'Причина не указана.';
   const publicCode = clean(body.publicCode, 9);
 
+  // Ссылка-приглашение на Discord-сервер корпорации (необязательная env-переменная).
+  // Голый код вида "apathy" превращаем в полную ссылку; невалидное значение — игнорируем.
+  const rawInvite = String(process.env.CORP_DISCORD_INVITE || '').trim();
+  const inviteUrl = rawInvite
+    ? rawInvite.startsWith('http')
+      ? rawInvite
+      : `https://discord.gg/${rawInvite}`
+    : '';
+  const safeInviteUrl = /^https:\/\/(discord\.gg|discord\.com\/invite)\/[\w-]+$/.test(inviteUrl)
+    ? inviteUrl
+    : '';
+
   const embed =
     decision === 'approved'
       ? {
@@ -140,10 +152,28 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const dm = (await dmRes.json()) as { id?: string };
     if (!dm.id) throw new Error('No DM channel');
 
+    // Кнопка-ссылка под сообщением (style 5 = LINK) — рендерится Discord'ом как настоящая
+    // кнопка «Вступить», в отличие от URL внутри поля embed (там он просто текст).
+    const messagePayload = {
+      embeds: [embed],
+      ...(decision === 'approved' && safeInviteUrl
+        ? {
+            components: [
+              {
+                type: 1,
+                components: [
+                  { type: 2, style: 5, label: 'Вступить в Discord', url: safeInviteUrl },
+                ],
+              },
+            ],
+          }
+        : {}),
+    };
+
     const msgRes = await fetch(`${DISCORD_API}/channels/${dm.id}/messages`, {
       method: 'POST',
       headers: { Authorization: `Bot ${botToken}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ embeds: [embed] }),
+      body: JSON.stringify(messagePayload),
     });
     if (!msgRes.ok) throw new Error(`Message ${msgRes.status}`);
     res.status(200).json({ ok: true });
