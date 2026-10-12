@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ApplicationFormData, CandidateApplication } from '../types';
+import React, { useEffect, useState } from 'react';
+import { ApplicationFormData, CandidateApplication, DiscordOauthReturn } from '../types';
 import { submitApplicationToFirestore, validateApplication } from '../lib/firebase';
 import {
   CheckCircle2,
@@ -12,18 +12,24 @@ import {
   RotateCcw,
   X,
   ExternalLink,
+  ShieldCheck,
 } from 'lucide-react';
+
+// Черновик формы на время ухода на OAuth-страницу Discord и обратно.
+const APPLY_DRAFT_KEY = 'apathy_apply_draft';
 
 interface ApplyModalProps {
   isOpen: boolean;
   onClose: () => void;
   onApplicationCreated?: (app: CandidateApplication) => void;
+  oauthReturn?: DiscordOauthReturn | null;
 }
 
 export const ApplyModal: React.FC<ApplyModalProps> = ({
   isOpen,
   onClose,
   onApplicationCreated,
+  oauthReturn,
 }) => {
   const [formData, setFormData] = useState<ApplicationFormData>({
     nick: '',
@@ -38,6 +44,30 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   const [submittedApp, setSubmittedApp] = useState<CandidateApplication | null>(null);
   const [handedToHr, setHandedToHr] = useState(true);
   const [copiedCode, setCopiedCode] = useState(false);
+  const [dcVerified, setDcVerified] = useState<{ id: string; name: string } | null>(null);
+
+  // Возврат с OAuth-страницы Discord: восстанавливаем черновик и фиксируем верификацию.
+  // oauthReturn приходит один раз (App уже почистил URL), поэтому эффект — только на маунт.
+  useEffect(() => {
+    if (!oauthReturn) return;
+    let draft: ApplicationFormData | null = null;
+    try {
+      const raw = localStorage.getItem(APPLY_DRAFT_KEY);
+      if (raw) draft = JSON.parse(raw) as ApplicationFormData;
+    } catch {
+      draft = null;
+    }
+    localStorage.removeItem(APPLY_DRAFT_KEY);
+
+    if (oauthReturn.status === 'ok' && /^\d{5,25}$/.test(oauthReturn.id) && oauthReturn.name) {
+      setDcVerified({ id: oauthReturn.id, name: oauthReturn.name });
+      setFormData((prev) => ({ ...(draft || prev), discord: oauthReturn.name }));
+    } else {
+      setError('Не удалось подтвердить Discord. Попробуйте ещё раз.');
+      if (draft) setFormData(draft);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleCopyCode = () => {
     if (!submittedApp?.publicCode) return;
@@ -58,6 +88,16 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
     if (error) setError(null);
   };
 
+  const handleDiscordVerify = () => {
+    // Сохраняем заполненные поля: после OAuth-редиректа ApplyModal восстановит их.
+    try {
+      localStorage.setItem(APPLY_DRAFT_KEY, JSON.stringify(formData));
+    } catch {
+      // ignore
+    }
+    window.location.href = '/api/discord-oauth-start';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -75,8 +115,8 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       setError('Укажите номер телефона');
       return;
     }
-    if (!formData.discord.trim()) {
-      setError('Укажите ваш Discord (логин или тег)');
+    if (!dcVerified) {
+      setError('Сначала подтвердите свой Discord — бот пришлёт на него вердикт и реквизиты входа');
       return;
     }
     if (!formData.docs.trim()) {
@@ -84,7 +124,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       return;
     }
 
-    const formatError = validateApplication(formData);
+    const formatError = validateApplication({ ...formData, discord: dcVerified.name });
     if (formatError) {
       setError(formatError);
       return;
@@ -96,7 +136,10 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
 
     // 1. Primary channel: shared Firestore collection read by the staff portal (ac)
     try {
-      created = await submitApplicationToFirestore(formData);
+      created = await submitApplicationToFirestore(
+        { ...formData, discord: dcVerified.name },
+        dcVerified
+      );
     } catch (fbErr) {
       console.warn('Firestore submit failed, falling back to REST API:', fbErr);
     }
@@ -163,7 +206,7 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
       nick: '',
       cid: '',
       phone: '',
-      discord: '',
+      discord: dcVerified?.name || '',
       docs: '',
     });
     setSubmittedApp(null);
@@ -267,12 +310,12 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
               />
             </div>
 
-            {/* 04. Discord (THE REQUESTED FIELD) */}
+            {/* 04. Discord — подтверждается через OAuth бота */}
             <div className="flex flex-col gap-1.5 text-left">
               <label htmlFor="discord" className="form-label text-[11px] text-cyan-400">
                 <span className="text-cyan-400 font-bold">04</span> DISCORD
                 <span className="text-[10px] text-cyan-400/70 normal-case ml-1 tracking-normal font-sans">
-                  (для связи с HR-отделом)
+                  (бот пришлёт сюда вердикт и реквизиты)
                 </span>
               </label>
               <input
@@ -280,11 +323,27 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                 name="discord"
                 type="text"
                 value={formData.discord}
-                onChange={handleChange}
-                placeholder="Например: apathy#0000 или username"
-                required
-                className="form-input text-sm border-cyan-500/40 text-white field-glow"
+                placeholder="Подтвердите Discord кнопкой ниже"
+                disabled
+                className="form-input text-sm border-cyan-500/40 text-white field-glow disabled:opacity-60 disabled:cursor-not-allowed"
               />
+              {dcVerified ? (
+                <div className="flex items-center gap-1.5 text-[11px] text-emerald-400 font-mono">
+                  <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                  <span>
+                    Discord подтверждён: <b className="text-emerald-300">{dcVerified.name}</b>
+                  </span>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  onClick={handleDiscordVerify}
+                  className="w-full !py-2.5 rounded-full border border-cyan-500/50 bg-cyan-950/40 hover:bg-cyan-900/50 text-cyan-200 text-xs font-['Bruno_Ace_SC',sans-serif] tracking-wider uppercase transition-all flex items-center justify-center gap-2 cursor-pointer"
+                >
+                  <ShieldCheck className="w-4 h-4 text-cyan-400" />
+                  <span>Подтвердить через Discord</span>
+                </button>
+              )}
             </div>
 
             {/* 05. Docs link */}

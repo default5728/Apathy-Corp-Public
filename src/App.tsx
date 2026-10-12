@@ -13,12 +13,28 @@ import { LeadersView } from './components/LeadersView';
 import { AboutView } from './components/AboutView';
 import { fetchApplicationsFromFirestore } from './lib/firebase';
 import { useScrollReveal } from './lib/reveal';
-import { CandidateApplication } from './types';
+import { CandidateApplication, DiscordOauthReturn } from './types';
 
 export default function App() {
-  const [showIntro, setShowIntro] = useState(true);
+  // Встречаем кандидата после OAuth-редиректа Discord (?dc=ok&dcId=...&dcName=...).
+  // Разбор и чистка URL — в инициализаторе state, чтобы сработало до первого рендера
+  // (и до intro-гейта): модалку заявки открываем сразу, черновик формы восстановит ApplyModal.
+  const [oauthReturn] = useState<DiscordOauthReturn | null>(() => {
+    if (typeof window === 'undefined') return null;
+    const params = new URLSearchParams(window.location.search);
+    const dc = params.get('dc');
+    if (dc !== 'ok' && dc !== 'err') return null;
+    const info: DiscordOauthReturn = {
+      status: dc,
+      id: (params.get('dcId') || '').replace(/\D/g, ''),
+      name: (params.get('dcName') || '').slice(0, 64),
+    };
+    window.history.replaceState({}, '', window.location.pathname);
+    return info;
+  });
+  const [showIntro, setShowIntro] = useState(!oauthReturn);
   const [currentTab, setCurrentTab] = useState<'home' | 'calc' | 'leaders' | 'about'>('home');
-  const [isApplyOpen, setIsApplyOpen] = useState(false);
+  const [isApplyOpen, setIsApplyOpen] = useState(Boolean(oauthReturn));
   const [pendingAppsCount, setPendingAppsCount] = useState<number>(0);
 
   useScrollReveal();
@@ -163,6 +179,7 @@ export default function App() {
         isOpen={isApplyOpen}
         onClose={() => setIsApplyOpen(false)}
         onApplicationCreated={handleApplicationCreated}
+        oauthReturn={oauthReturn}
       />
     </div>
   );

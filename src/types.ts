@@ -16,6 +16,16 @@ export interface CandidateApplication extends ApplicationFormData {
   source: string;
   /** Код вида AP-XXXXXX для проверки статуса на публичном сайте. */
   publicCode?: string;
+  /** Discord-аккаунт кандидата, подтверждённый через OAuth бота (не совпадает с полем discord). */
+  discordVerifiedId?: string;
+  discordVerifiedName?: string;
+}
+
+/** Параметры, с которыми сайт встречает кандидата после OAuth-редиректа Discord. */
+export interface DiscordOauthReturn {
+  status: 'ok' | 'err';
+  id: string;
+  name: string;
 }
 
 export interface CorporationMetrics {

@@ -66,7 +66,8 @@ export function validateApplication(data: ApplicationFormData): string | null {
 }
 
 export async function submitApplicationToFirestore(
-  data: ApplicationFormData
+  data: ApplicationFormData,
+  verification?: { id: string; name: string } | null
 ): Promise<CandidateApplication> {
   const ref = doc(collection(db, APPLICATIONS_COLLECTION));
   const record: CandidateApplication = {
@@ -84,6 +85,10 @@ export async function submitApplicationToFirestore(
     createdProfileId: '',
     publicCode: generatePublicCode(),
   };
+  if (verification && verification.id && verification.name) {
+    record.discordVerifiedId = verification.id;
+    record.discordVerifiedName = verification.name;
+  }
 
   await setDoc(ref, record);
   return record;
@@ -104,6 +109,8 @@ function mapApplicationDoc(id: string, data: Record<string, unknown>): Candidate
     reviewerNotes: String(data.reviewerNotes || ''),
     createdProfileId: String(data.createdProfileId || ''),
     publicCode: String(data.publicCode || ''),
+    discordVerifiedId: data.discordVerifiedId ? String(data.discordVerifiedId) : undefined,
+    discordVerifiedName: data.discordVerifiedName ? String(data.discordVerifiedName) : undefined,
   };
 }
 
