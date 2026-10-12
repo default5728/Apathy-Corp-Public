@@ -34,32 +34,67 @@ export interface PublicFleetItem {
   rankRequired: string;
   slot: string;
   trunkKg: number;
-  fuelPercent: number;
   image: string;
   desc: string;
 }
 
-/** Публичный автопарк: только машины с publicVisible !== false. */
+interface RawFleetDoc {
+  modelName?: unknown;
+  plate?: unknown;
+  status?: unknown;
+  rankRequired?: unknown;
+  slot?: unknown;
+  trunkKg?: unknown;
+  publicVisible?: unknown;
+  publicImage?: unknown;
+  publicDesc?: unknown;
+}
+
+function mapFleetDoc(id: string, data: RawFleetDoc): PublicFleetItem | null {
+  const modelName = String(data.modelName || '');
+  if (!modelName || data.publicVisible === false) return null;
+  return {
+    id,
+    modelName,
+    plate: String(data.plate || ''),
+    status: String(data.status || ''),
+    rankRequired: String(data.rankRequired || ''),
+    slot: String(data.slot || ''),
+    trunkKg: Number(data.trunkKg) || 0,
+    image: String(data.publicImage || ''),
+    desc: String(data.publicDesc || ''),
+  };
+}
+
+// Правила корпоративной базы пропускают list только при условии trunkKg >= 0 —
+// запрос обязан повторять его, иначе Firestore отклоняет выборку целиком.
+const publicFleetQuery = () =>
+  query(collection(corpDb, 'fleet'), where('trunkKg', '>=', 0));
+
+/** Разовое чтение публичного автопарка (машины с publicVisible !== false). */
 export async function fetchPublicFleet(): Promise<PublicFleetItem[]> {
-  const snap = await getDocs(collection(corpDb, 'fleet'));
+  const snap = await getDocs(publicFleetQuery());
   return snap.docs
-    .filter((d) => d.data().publicVisible !== false)
-    .map((d) => {
-      const data = d.data();
-      return {
-        id: d.id,
-        modelName: String(data.modelName || ''),
-        plate: String(data.plate || ''),
-        status: String(data.status || ''),
-        rankRequired: String(data.rankRequired || ''),
-        slot: String(data.slot || ''),
-        trunkKg: Number(data.trunkKg) || 0,
-        fuelPercent: Math.max(0, Math.min(100, Number(data.fuelPercent) || 0)),
-        image: String(data.publicImage || ''),
-        desc: String(data.publicDesc || ''),
-      };
-    })
-    .filter((v) => v.modelName.length > 0);
+    .map((d) => mapFleetDoc(d.id, d.data() as RawFleetDoc))
+    .filter((v): v is PublicFleetItem => v !== null);
+}
+
+/**
+ * Живая подписка на автопарк: новые машины из корпоративного портала
+ * появляются на сайте сами, без перезагрузки страницы.
+ */
+export function subscribePublicFleet(cb: (items: PublicFleetItem[]) => void): () => void {
+  return onSnapshot(
+    publicFleetQuery(),
+    (snap) => {
+      cb(
+        snap.docs
+          .map((d) => mapFleetDoc(d.id, d.data() as RawFleetDoc))
+          .filter((v): v is PublicFleetItem => v !== null)
+      );
+    },
+    () => cb([])
+  );
 }
 
 export interface CorpPublicStats {

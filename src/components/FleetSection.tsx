@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Truck, X } from 'lucide-react';
-import { fetchPublicFleet, type PublicFleetItem } from '../lib/corpFirebase';
+import { subscribePublicFleet, type PublicFleetItem } from '../lib/corpFirebase';
 
 interface VehicleCard {
   id: string;
@@ -9,45 +9,6 @@ interface VehicleCard {
   imgSrc: string;
   desc: string;
 }
-
-// Дефолтный список — показывается только пока облако недоступно или автопарк пуст.
-const VEHICLES: VehicleCard[] = [
-  {
-    id: '1',
-    title: 'Mers Runner',
-    subtitle: '1.800 КГ ВМЕСТИМОСТЬ',
-    imgSrc: '/images/trans_1.png',
-    desc: 'Рабочий тягач для сбора камня и дерева. Доступен с 3-го ранга.',
-  },
-  {
-    id: '2',
-    title: 'Mers v250 W447',
-    subtitle: '1.000 КГ ВМЕСТИМОСТЬ',
-    imgSrc: '/images/trans_2.png',
-    desc: 'Скоростной фургон для сбора и доставки ресурсов. Доступен с 3-го ранга',
-  },
-  {
-    id: '3',
-    title: 'Dogge Run 1500 TRX',
-    subtitle: '600 КГ ВМЕСТИМОСТЬ',
-    imgSrc: '/images/trans_3.png',
-    desc: 'Тяжелый корпоративный суперпикап для поставок сырья на склады. Доступен с 4-го ранга',
-  },
-  {
-    id: '4',
-    title: 'Mers v250 W447',
-    subtitle: '1.000 КГ ВМЕСТИМОСТЬ',
-    imgSrc: '/images/trans_4.png',
-    desc: 'Скоростной фургон для сбора и доставки ресурсов. Доступен с 3-го ранга',
-  },
-  {
-    id: '5',
-    title: 'Rumpo Заказной',
-    subtitle: 'Зарезервированный транспорт ( PNG later ) ',
-    imgSrc: '/images/rumpo.jpg',
-    desc: 'Скоростной фургон для сбора и доставки ресурсов. Доступен с 3-го ранга',
-  },
-];
 
 const toCard = (v: PublicFleetItem): VehicleCard => ({
   id: v.id,
@@ -76,20 +37,14 @@ const CarPlaceholder: React.FC<{ className?: string }> = ({ className }) => (
 
 export const FleetSection: React.FC = () => {
   const [selectedImg, setSelectedImg] = useState<VehicleCard | null>(null);
-  const [cars, setCars] = useState<VehicleCard[]>(VEHICLES);
+  const [cars, setCars] = useState<VehicleCard[]>([]);
 
-  // Автопарк синхронизируется с порталом (Firestore fleet, publicVisible);
-  // при ошибке сети остаётся дефолтный список.
+  // Автопарк живёт в Firestore корпоративной базы (fleet, publicVisible)
+  // и приходит живой рассылкой: создали/отредактировали машину на портале — сайт обновился сам.
   useEffect(() => {
-    let alive = true;
-    fetchPublicFleet()
-      .then((items) => {
-        if (alive && items.length > 0) setCars(items.map(toCard));
-      })
-      .catch(() => {});
-    return () => {
-      alive = false;
-    };
+    return subscribePublicFleet((items) => {
+      setCars(items.map(toCard));
+    });
   }, []);
 
   return (
@@ -99,6 +54,14 @@ export const FleetSection: React.FC = () => {
       </h2>
 
       <div className="gallery-grid">
+        {cars.length === 0 && (
+          <div
+            className="col-span-full !py-12 text-center text-sm text-zinc-500 tracking-[0.15em] uppercase"
+            style={{ fontFamily: 'Jura, sans-serif' }}
+          >
+            Автопарк обновляется — загляните чуть позже
+          </div>
+        )}
         {cars.map((v) => (
           <div
             key={v.id}

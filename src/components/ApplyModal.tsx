@@ -8,6 +8,7 @@ import {
   AlertCircle,
   Database,
   Check,
+  Copy,
   RotateCcw,
   X,
   ExternalLink,
@@ -36,6 +37,18 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [submittedApp, setSubmittedApp] = useState<CandidateApplication | null>(null);
   const [handedToHr, setHandedToHr] = useState(true);
+  const [copiedCode, setCopiedCode] = useState(false);
+
+  const handleCopyCode = () => {
+    if (!submittedApp?.publicCode) return;
+    navigator.clipboard
+      .writeText(submittedApp.publicCode)
+      .then(() => {
+        setCopiedCode(true);
+        setTimeout(() => setCopiedCode(false), 2000);
+      })
+      .catch(() => {});
+  };
 
   if (!isOpen) return null;
 
@@ -350,8 +363,18 @@ export const ApplyModal: React.FC<ApplyModalProps> = ({
                     {submittedApp.publicCode}
                   </div>
                 </div>
-                <div className="text-[10px] text-zinc-500 max-w-[180px] leading-relaxed font-mono">
-                  Сохраните его — по нему вы сможете узнать статус заявки на главной странице.
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                  <button
+                    type="button"
+                    onClick={handleCopyCode}
+                    className="px-3 py-1.5 rounded-lg bg-cyan-400 hover:bg-cyan-300 text-black text-[11px] font-bold flex items-center gap-1.5 transition-all cursor-pointer"
+                  >
+                    {copiedCode ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
+                    {copiedCode ? 'Скопировано' : 'Копировать'}
+                  </button>
+                  <div className="text-[10px] text-zinc-500 max-w-[180px] leading-relaxed font-mono text-right">
+                    Сохраните его — по нему вы сможете узнать статус заявки на главной странице.
+                  </div>
                 </div>
               </div>
             )}
