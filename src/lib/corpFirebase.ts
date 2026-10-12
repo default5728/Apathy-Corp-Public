@@ -121,13 +121,32 @@ export function subscribePublicStats(cb: (stats: CorpPublicStats) => void): () =
 
 /**
  * Онлайн-счётчик: портал раз в 30 секунд пишет бикон {at: ISO} в public_presence/{profileId}.
- * Считаем живыми те биконы, которым меньше двух минут (TTL портала).
+ * Считаем живыми биконы младше пяти минут (TTL портала, запас под троттлинг фоновых вкладок).
+ * Запрос тянет все биконы (правилами поле не ограничено), свежесть пересчитываем на клиенте
+ * по таймеру — счётчик и растёт, и затухает, пока вкладка открыта.
  */
+const PRESENCE_TTL_MS = 300_000;
+
 export function subscribeOnlineCount(cb: (count: number) => void): () => void {
-  const cutoffIso = new Date(Date.now() - 120_000).toISOString();
-  return onSnapshot(
-    query(collection(corpDb, 'public_presence'), where('at', '>=', cutoffIso)),
-    (snap) => cb(snap.size),
-    () => cb(0)
+  let latest: string[] = [];
+  const compute = () => {
+    const cutoff = Date.now() - PRESENCE_TTL_MS;
+    cb(latest.filter((at) => Date.parse(at) >= cutoff).length);
+  };
+  const unsub = onSnapshot(
+    query(collection(corpDb, 'public_presence'), where('at', '>', new Date(0).toISOString())),
+    (snap) => {
+      latest = snap.docs.map((d) => String((d.data() as { at?: unknown }).at || ''));
+      compute();
+    },
+    () => {
+      latest = [];
+      compute();
+    }
   );
+  const timer = setInterval(compute, 30_000);
+  return () => {
+    unsub();
+    clearInterval(timer);
+  };
 }
