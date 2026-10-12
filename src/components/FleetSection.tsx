@@ -20,9 +20,7 @@ const toCard = (v: PublicFleetItem): VehicleCard => ({
   imgSrc: v.image,
   desc:
     v.desc ||
-    [v.slot && `Стоянка: ${v.slot}`, v.rankRequired && `Доступ: ${v.rankRequired}`]
-      .filter(Boolean)
-      .join(' · ') ||
+    [v.rankRequired && `Доступ: ${v.rankRequired}`].filter(Boolean).join(' · ') ||
     'Корпоративный транспорт.',
 });
 
